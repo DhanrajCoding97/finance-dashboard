@@ -1,6 +1,5 @@
 import { createContext , useContext, useReducer, useEffect, use } from "react";
 import { mockTransactions } from "../data/mockData";
-import { type } from "node:os";
 
 const AppContext = createContext();
 
