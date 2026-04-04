@@ -2,7 +2,10 @@ import React from 'react'
 
 const Dashboard = () => {
   return (
-    <h1 className='text-2xl'>Dashboard</h1>
+    <div>
+      <h1 className="text-xl font-semibold text-foreground mb-6">Dashboard</h1>
+      {/* cards, charts etc */}
+    </div>
   )
 }
 
