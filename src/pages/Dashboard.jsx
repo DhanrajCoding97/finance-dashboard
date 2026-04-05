@@ -1,10 +1,9 @@
-import React from 'react'
+import SummaryCards from "../components/ui/dashboard/SummaryCards"
 
 const Dashboard = () => {
   return (
-    <div>
-      <h1 className="text-xl font-semibold text-foreground mb-6">Dashboard</h1>
-      {/* cards, charts etc */}
+    <div c>
+      <SummaryCards />
     </div>
   )
 }

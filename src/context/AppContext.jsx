@@ -1,11 +1,11 @@
-import { createContext , useContext, useReducer, useEffect, use } from "react";
+import { createContext , useContext, useReducer, useEffect } from "react";
 import { mockTransactions } from "../data/mockData";
 
 const AppContext = createContext();
 
 const initialState = {
     transactions : [],
-    role: 'user', // user or admin
+    role: 'viewer', // viewer or admin
     theme : 'system', // light, dark, system
     filters: {
         search: '',
@@ -75,6 +75,8 @@ export function AppProvider({children}) {
 
     // Apply dark / light theme 
     useEffect(()=>{
+    const root = window.document.documentElement
+
     if (state.theme === 'dark') {
       root.classList.add('dark')
     } else if (state.theme === 'light') {

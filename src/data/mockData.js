@@ -24,6 +24,9 @@ export const mockTransactions = [
   { id: '18', date: '2025-06-21', description: 'Rapido Bike',          amount: 95,    category: 'Transport',      type: 'expense' },
   { id: '19', date: '2025-06-22', description: 'Spotify Premium',      amount: 119,   category: 'Entertainment',  type: 'expense' },
   { id: '20', date: '2025-06-24', description: 'Amazon Recharge',      amount: 239,   category: 'Other',          type: 'expense' },
+  { id: '21', date: '2025-05-01', description: 'May Salary',    amount: 85000, category: 'Salary',        type: 'income'  },
+  { id: '22', date: '2025-05-05', description: 'May Groceries', amount: 3200,  category: 'Food & Dining', type: 'expense' },
+  { id: '23', date: '2025-05-10', description: 'May Freelance', amount: 15000, category: 'Freelance',     type: 'income'  },
 ]
 
 export const monthlyTrend = [

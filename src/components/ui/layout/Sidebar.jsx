@@ -1,27 +1,24 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, ArrowLeftRight, Lightbulb, TrendingUp,Sun, Moon, Monitor } from 'lucide-react'
+import { useState } from 'react'
+import {
+  LayoutDashboard, ArrowLeftRight, Lightbulb, TrendingUp,
+  Sun, Moon, Monitor, Menu, X
+} from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 import { useAppContext } from '@/context/AppContext'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { to: '/dashboard',     label: 'Dashboard',     icon: LayoutDashboard },
-  { to: '/transactions',  label: 'Transactions',   icon: ArrowLeftRight  },
-  { to: '/insights',      label: 'Insights',       icon: Lightbulb       },
+  { to: '/dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
+  { to: '/transactions', label: 'Transactions', icon: ArrowLeftRight  },
+  { to: '/insights',     label: 'Insights',     icon: Lightbulb       },
 ]
 
 const themeOptions = [
@@ -32,42 +29,49 @@ const themeOptions = [
 
 export default function Sidebar() {
   const { state, dispatch } = useAppContext()
+  const [isOpen, setIsOpen] = useState(false)
   const ThemeIcon = themeOptions.find(t => t.value === state.theme)?.icon ?? Monitor
 
-
-  return (
-    <aside className="w-56 shrink-0 h-screen flex flex-col border-r border-border bg-sidebar">
-
+  const sidebarContent = (
+    <aside className="w-56 h-full flex flex-col border-r border-border bg-sidebar">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 h-16 border-b border-border">
         <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
           <TrendingUp size={14} className="text-primary-foreground" />
         </div>
         <span className="font-semibold text-sm text-sidebar-foreground tracking-tight">
-          FinTrack
+          Track Finance
         </span>
-        {/* Theme toggle */}
-        <div className='ml-auto'>
-        <DropdownMenu >
-          <DropdownMenuTrigger name="theme toggle">
-              <ThemeIcon size={18} className='dark:text-white'/>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-36">
-            {themeOptions.map(({ value, label, icon: Icon }) => (
-              <DropdownMenuItem
-                key={value}
-                onClick={() => dispatch({ type: 'SET_THEME', payload: value })}
-                className={cn(
-                  'flex items-center gap-2 text-sm cursor-pointer',
-                  state.theme === value && 'text-primary font-medium'
-                )}
-              >
-                <Icon size={13} />
-                {label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="ml-auto flex items-center gap-2">
+          {/* Theme toggle */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-none">
+              <ThemeIcon size={16} className="text-sidebar-foreground hover:text-primary transition-colors" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-36">
+              {themeOptions.map(({ value, label, icon: Icon }) => (
+                <DropdownMenuItem
+                  key={value}
+                  onClick={() => dispatch({ type: 'SET_THEME', payload: value })}
+                  className={cn(
+                    'flex items-center gap-2 text-sm cursor-pointer',
+                    state.theme === value && 'text-primary font-medium'
+                  )}
+                >
+                  <Icon size={13} />
+                  {label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Close button — mobile only */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="md:hidden text-sidebar-foreground hover:text-primary transition-colors"
+          >
+            <X size={16} />
+          </button>
         </div>
       </div>
 
@@ -77,6 +81,7 @@ export default function Sidebar() {
           <NavLink
             key={to}
             to={to}
+            onClick={() => setIsOpen(false)}
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors duration-150',
@@ -94,37 +99,30 @@ export default function Sidebar() {
 
       <Separator />
 
-      {/* Footer — Role + Theme */}
+      {/* Footer — Role */}
       <div className="px-4 py-4 flex flex-col gap-3">
-
-        {/* Role switcher */}
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs text-muted-foreground dark:text-white px-1">Role</span>
+          <span className="text-sm text-sidebar-foreground px-1">Role</span>
           <Select
             value={state.role}
             onValueChange={(val) => dispatch({ type: 'SET_ROLE', payload: val })}
           >
-            <SelectTrigger className="h-8 text-xs bg-background text-black dark:text-white">
+            <SelectTrigger className="h-8 text-xs bg-background w-28">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="admin">
-                <div className="flex items-center gap-2">
-                  <span className='text-xs font-semibold'>Admin</span>
-                </div>
+                <span className="text-xs font-semibold">Admin</span>
               </SelectItem>
               <SelectItem value="viewer">
-                <div className="flex items-center gap-2">
-                  <span>Viewer</span>
-                </div>
+                <span className="text-xs">Viewer</span>
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Current role indicator */}
         <div className="flex items-center justify-between px-1">
-          <span className="text-xs text-white">Logged in as</span>
+          <span className="text-xs text-muted-foreground">Logged in as</span>
           <Badge
             variant="outline"
             className={cn(
@@ -137,8 +135,42 @@ export default function Sidebar() {
             {state.role === 'admin' ? 'Admin' : 'Viewer'}
           </Badge>
         </div>
-
       </div>
     </aside>
+  )
+
+  return (
+    <>
+      {/* Desktop — always visible */}
+      <div className="hidden md:flex h-screen shrink-0">
+        {sidebarContent}
+      </div>
+
+      {/* Mobile — burger button */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-background border border-border shadow-sm text-foreground"
+      >
+        <Menu size={18} />
+      </button>
+
+      {/* Mobile — backdrop */}
+      {isOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Mobile — slide-in drawer */}
+      <div
+        className={cn(
+          'md:hidden fixed top-0 left-0 z-50 h-full transition-transform duration-300 ease-in-out',
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+      >
+        {sidebarContent}
+      </div>
+    </>
   )
 }
