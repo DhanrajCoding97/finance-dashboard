@@ -1,4 +1,3 @@
-import React from 'react';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   Card,
@@ -14,13 +13,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { monthlyTrend } from '@/data/mockData';
-
-// Transforming data to include balance for potential future use
-const dataWithBalance = monthlyTrend.map((item) => ({
-  ...item,
-  balance: item.income - item.expenses,
-}));
+import { getMonthlyTrend } from '@/lib/helper';
+import { useAppContext } from '@/context/AppContext';
 
 const chartConfig = {
   income: {
@@ -38,6 +32,20 @@ const chartConfig = {
 };
 
 const BalanceTrend = () => {
+  const { state } = useAppContext();
+  const chartData = getMonthlyTrend(state.transactions);
+
+  // Empty state
+  if (chartData.length === 0) {
+    return (
+      <Card className='flex items-center justify-center min-h-75'>
+        <p className='text-sm text-muted-foreground'>
+          No transaction data available
+        </p>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -50,7 +58,7 @@ const BalanceTrend = () => {
           className='aspect-auto h-64 w-full'
         >
           <AreaChart
-            data={dataWithBalance}
+            data={chartData}
             margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
           >
             {/* 🔥 Gradients */}

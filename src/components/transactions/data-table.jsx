@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 export function DataTable({ columns, data }) {
-  const [sorting, setSorting] = useState([]);
+  const [sorting, setSorting] = useState([{ id: 'amount', desc: true }]);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
@@ -83,7 +83,10 @@ export function DataTable({ columns, data }) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length}>
+                <TableCell
+                  colSpan={columns.length}
+                  className='h-24 text-center'
+                >
                   No transactions found.
                 </TableCell>
               </TableRow>

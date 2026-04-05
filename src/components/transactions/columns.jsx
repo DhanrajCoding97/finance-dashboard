@@ -59,6 +59,7 @@ export const columns = (dispatch) => [
   },
   {
     id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => {
       const id = row.original.id;
 
@@ -67,7 +68,7 @@ export const columns = (dispatch) => [
           variant='ghost'
           size='icon'
           onClick={() => dispatch({ type: 'DELETE_TRANSACTION', payload: id })}
-          className='w-full flex items-end'
+          className='w-full flex items-center justify-center'
         >
           <Trash className='h-4 w-4 text-red-500' />
         </Button>

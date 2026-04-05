@@ -1,104 +1,186 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogFooter,
+  DialogClose,
 } from '@/components/ui/dialog';
-import { Field, FieldGroup } from '@/components/ui/field';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
-import { DatePicker } from '../ui/date-picker';
+import { useAppContext } from '@/context/AppContext';
 import { CATEGORIES } from '@/data/mockData';
-export function AddTransaction() {
-  const [date, setDate] = useState(null);
-  return (
-    <Dialog className='h-25'>
-      <form>
-        <DialogTrigger
-          render={<Button variant='outline'>Add Transaction</Button>}
-        />
-        <DialogContent className='sm:max-w-sm'>
-          <DialogHeader>
-            <DialogTitle>New transaction</DialogTitle>
-          </DialogHeader>
-          {/*  Date */}
-          {/* <Field>
-              <Label htmlFor='date'>Date</Label>
-              <Input id='date' name='date' type='date' />
-            </Field> */}
-          <FieldGroup>
-            <DatePicker value={date} onChange={setDate} />
-            {/*  Description */}
-            <Field>
-              <Label htmlFor='description'>Description</Label>
-              <Input
-                id='description'
-                name='description'
-                placeholder='e.g. Zomato Order'
-              />
-            </Field>
-            {/*  Amount */}
-            <Field>
-              <Label htmlFor='amount'>Amount</Label>
-              <Input
-                id='amount'
-                name='amount'
-                type='number'
-                placeholder='₹ Enter amount'
-              />
-            </Field>
-            {/* Category */}
-            <Field>
-              <Label>Category</Label>
-              <Select name='category'>
-                <SelectTrigger>
-                  <SelectValue placeholder='Select category' />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
 
-            {/* Type  */}
-            <Field>
-              <Label>Type</Label>
-              <Select name='type'>
-                <SelectTrigger>
-                  <SelectValue placeholder='Select type' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='income'>Income</SelectItem>
-                  <SelectItem value='expense'>Expense</SelectItem>
-                </SelectContent>
-              </Select>
-            </Field>
-          </FieldGroup>
-          <DialogFooter>
-            <DialogClose render={<Button variant='outline'>Cancel</Button>} />
-            <Button type='submit' onClick={() => console.log('submitted')}>
-              Save changes
-            </Button>
+const schema = z.object({
+  description: z.string().min(2, 'Description must be at least 2 characters'),
+  amount: z
+    .string()
+    .min(1, 'Amount is required')
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: 'Amount must be a positive number',
+    }),
+  date: z.string().min(1, 'Date is required'),
+  category: z.string().min(1, 'Please select a category'),
+  type: z.enum(['income', 'expense'], {
+    errorMap: () => ({ message: 'Please select a type' }),
+  }),
+});
+
+export function AddTransaction({ open, onOpenChange }) {
+  const { dispatch } = useAppContext();
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      description: '',
+      amount: '',
+      date: '',
+      category: '',
+      type: '',
+    },
+  });
+
+  const onSubmit = (data) => {
+    const newTransaction = {
+      id: crypto.randomUUID(),
+      description: data.description,
+      amount: Number(data.amount),
+      date: data.date,
+      category: data.category,
+      type: data.type,
+    };
+
+    dispatch({ type: 'ADD_TRANSACTION', payload: newTransaction });
+    reset();
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className='sm:max-w-sm'>
+        <DialogHeader>
+          <DialogTitle>New transaction</DialogTitle>
+        </DialogHeader>
+
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className='flex flex-col gap-4 py-2'
+        >
+          {/* Date */}
+          <div className='flex flex-col gap-1.5'>
+            <Label htmlFor='date'>Date</Label>
+            <Input id='date' type='date' {...register('date')} />
+            {errors.date && (
+              <p className='text-xs text-red-500'>{errors.date.message}</p>
+            )}
+          </div>
+
+          {/* Description */}
+          <div className='flex flex-col gap-1.5'>
+            <Label htmlFor='description'>Description</Label>
+            <Input
+              id='description'
+              placeholder='e.g. Zomato Order'
+              {...register('description')}
+            />
+            {errors.description && (
+              <p className='text-xs text-red-500'>
+                {errors.description.message}
+              </p>
+            )}
+          </div>
+
+          {/* Amount */}
+          <div className='flex flex-col gap-1.5'>
+            <Label htmlFor='amount'>Amount</Label>
+            <Input
+              id='amount'
+              type='number'
+              placeholder='₹ Enter amount'
+              {...register('amount')}
+            />
+            {errors.amount && (
+              <p className='text-xs text-red-500'>{errors.amount.message}</p>
+            )}
+          </div>
+
+          {/* Category */}
+          <div className='flex flex-col gap-1.5'>
+            <Label>Category</Label>
+            <Controller
+              name='category'
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Select category' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((cat) => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.category && (
+              <p className='text-xs text-red-500'>{errors.category.message}</p>
+            )}
+          </div>
+
+          {/* Type */}
+          <div className='flex flex-col gap-1.5'>
+            <Label>Type</Label>
+            <Controller
+              name='type'
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Select type' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='income'>Income</SelectItem>
+                    <SelectItem value='expense'>Expense</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.type && (
+              <p className='text-xs text-red-500'>{errors.type.message}</p>
+            )}
+          </div>
+
+          <DialogFooter className='pt-2'>
+            <DialogClose asChild>
+              <Button type='button' variant='outline' onClick={() => reset()}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type='submit'>Save transaction</Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }
