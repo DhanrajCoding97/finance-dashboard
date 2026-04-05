@@ -11,14 +11,6 @@ import {
   Menu,
   X,
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -126,45 +118,6 @@ export default function Sidebar() {
           dispatch({ type: 'SET_ROLE', payload: newRole })
         }
       />
-
-      {/* <div className='px-4 py-4 flex flex-col gap-3'>
-        <div className='flex items-center justify-between gap-2'>
-          <span className='text-sm text-sidebar-foreground px-1'>Role</span>
-          <Select
-            value={state.role}
-            onValueChange={(val) =>
-              dispatch({ type: 'SET_ROLE', payload: val })
-            }
-          >
-            <SelectTrigger className='h-8 text-xs bg-background w-28'>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='admin'>
-                <span className='text-xs font-semibold'>Admin</span>
-              </SelectItem>
-              <SelectItem value='viewer'>
-                <span className='text-xs'>Viewer</span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className='flex items-center justify-between px-1'>
-          <span className='text-xs text-muted-foreground'>Logged in as</span>
-          <Badge
-            variant='outline'
-            className={cn(
-              'text-[10px] px-2 py-0 border',
-              state.role === 'admin'
-                ? 'text-primary border-primary/30 bg-primary/5'
-                : 'text-muted-foreground border-border',
-            )}
-          >
-            {state.role === 'admin' ? 'Admin' : 'Viewer'}
-          </Badge>
-        </div>
-      </div> */}
     </aside>
   );
 

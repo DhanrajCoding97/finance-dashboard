@@ -1,6 +1,6 @@
 import SummaryCards from '@/components/dashboard/SummaryCards';
 import BalanceTrend from '@/components/dashboard/BalanceTrend';
-const Dashboard = () => {
+const DashboardPage = () => {
   return (
     <div className='flex flex-col gap-4'>
       <SummaryCards />
@@ -9,4 +9,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;
