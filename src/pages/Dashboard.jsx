@@ -1,11 +1,12 @@
-import SummaryCards from "../components/ui/dashboard/SummaryCards"
-
+import SummaryCards from '@/components/dashboard/SummaryCards';
+import BalanceTrend from '@/components/dashboard/BalanceTrend';
 const Dashboard = () => {
   return (
-    <div c>
+    <div className='flex flex-col gap-4'>
       <SummaryCards />
+      <BalanceTrend />
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
