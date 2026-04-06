@@ -7,10 +7,17 @@ import { useState } from 'react';
 
 const TransactionsPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editTransaction, setEditTransaction] = useState(null); // 👈 add this
   const { state, dispatch } = useAppContext();
 
   const isAdmin = state.role === 'admin';
-  const tableColumns = columns(dispatch, isAdmin);
+
+  const handleEdit = (transaction) => {
+    setEditTransaction(transaction);
+    setDialogOpen(true);
+  };
+
+  const tableColumns = columns(dispatch, isAdmin, handleEdit);
 
   return (
     <div className='p-4 ml-9 md:ml-0 flex flex-col gap-4'>
@@ -23,11 +30,22 @@ const TransactionsPage = () => {
             Browse and manage your activity
           </p>
         </div>
-
         {isAdmin && (
-          <Button onClick={() => setDialogOpen(true)}>+ Add Transaction</Button>
+          <Button
+            onClick={() => {
+              setEditTransaction(null); // 👈 ensure add mode
+              setDialogOpen(true);
+            }}
+          >
+            + Add Transaction
+          </Button>
         )}
       </div>
+
+      {/* {isAdmin && (
+          <Button onClick={() => setDialogOpen(true)}>+ Add Transaction</Button>
+        )}
+      </div> */}
 
       {!isAdmin && (
         <div className='text-xs text-muted-foreground bg-muted px-3 py-2 rounded-lg w-fit'>
@@ -35,7 +53,15 @@ const TransactionsPage = () => {
         </div>
       )}
 
-      <AddTransaction open={dialogOpen} onOpenChange={setDialogOpen} />
+      {/* <AddTransaction open={dialogOpen} onOpenChange={setDialogOpen} /> */}
+      <AddTransaction
+        open={dialogOpen}
+        onOpenChange={(val) => {
+          setDialogOpen(val);
+          if (!val) setEditTransaction(null); // 👈 clear on close
+        }}
+        editTransaction={editTransaction} // 👈 pass this
+      />
       <DataTable columns={tableColumns} data={state.transactions} />
     </div>
   );

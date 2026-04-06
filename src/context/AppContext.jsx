@@ -26,6 +26,14 @@ function reducer(state, action) {
       return { ...state, transactions: updated };
     }
 
+    case 'EDIT_TRANSACTION': {
+      const updated = state.transactions.map((t) =>
+        t.id === action.payload.id ? { ...t, ...action.payload } : t,
+      );
+      localStorage.setItem('transactions', JSON.stringify(updated));
+      return { ...state, transactions: updated };
+    }
+
     case 'DELETE_TRANSACTION': {
       const updated = state.transactions.filter((t) => t.id !== action.payload);
       localStorage.setItem('transactions', JSON.stringify(updated));

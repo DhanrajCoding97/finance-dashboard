@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,9 +38,9 @@ const schema = z.object({
   }),
 });
 
-export function AddTransaction({ open, onOpenChange }) {
+export function AddTransaction({ open, onOpenChange, editTransaction = null }) {
   const { dispatch } = useAppContext();
-
+  const isEditing = !!editTransaction;
   const {
     register,
     handleSubmit,
@@ -57,6 +57,16 @@ export function AddTransaction({ open, onOpenChange }) {
       type: '',
     },
   });
+  // Reset form values when editTransaction changes
+  useEffect(() => {
+    reset({
+      description: editTransaction?.description ?? '',
+      amount: editTransaction?.amount?.toString() ?? '',
+      date: editTransaction?.date ?? '',
+      category: editTransaction?.category ?? '',
+      type: editTransaction?.type ?? '',
+    });
+  }, [editTransaction, reset]);
 
   const onSubmit = (data) => {
     const newTransaction = {
@@ -67,8 +77,26 @@ export function AddTransaction({ open, onOpenChange }) {
       category: data.category,
       type: data.type,
     };
-
-    dispatch({ type: 'ADD_TRANSACTION', payload: newTransaction });
+    if (isEditing) {
+      dispatch({
+        type: 'EDIT_TRANSACTION',
+        payload: {
+          ...data,
+          amount: Number(data.amount),
+          id: editTransaction.id,
+        },
+      });
+    } else {
+      dispatch({
+        type: 'ADD_TRANSACTION',
+        payload: {
+          ...data,
+          amount: Number(data.amount),
+          id: crypto.randomUUID(),
+        },
+      });
+    }
+    // dispatch({ type: 'ADD_TRANSACTION', payload: newTransaction });
     reset();
     onOpenChange(false);
   };
@@ -77,7 +105,9 @@ export function AddTransaction({ open, onOpenChange }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-sm'>
         <DialogHeader>
-          <DialogTitle>New transaction</DialogTitle>
+          <DialogTitle>
+            {isEditing ? 'Edit transaction' : 'New transaction'}
+          </DialogTitle>
         </DialogHeader>
 
         <form
@@ -172,12 +202,19 @@ export function AddTransaction({ open, onOpenChange }) {
           </div>
 
           <DialogFooter className='pt-2'>
-            <DialogClose asChild>
-              <Button type='button' variant='outline' onClick={() => reset()}>
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button type='submit'>Save transaction</Button>
+            <Button
+              type='button'
+              variant='outline'
+              onClick={() => {
+                reset();
+                onOpenChange(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button type='submit'>
+              {isEditing ? 'Save changes' : 'Save transaction'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

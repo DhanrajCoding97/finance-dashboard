@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { ArrowUpDown, Trash } from 'lucide-react';
+import { ArrowUpDown, Trash, SquarePen } from 'lucide-react';
 
-export const columns = (dispatch) => [
+export const columns = (dispatch, isAdmin, onEdit) => [
   {
     accessorKey: 'date',
     header: 'Date',
@@ -64,14 +64,26 @@ export const columns = (dispatch) => [
       const id = row.original.id;
 
       return (
-        <Button
-          variant='ghost'
-          size='icon'
-          onClick={() => dispatch({ type: 'DELETE_TRANSACTION', payload: id })}
-          className='w-full flex items-center justify-center'
-        >
-          <Trash className='h-4 w-4 text-red-500' />
-        </Button>
+        <div className='flex items-center justify-center'>
+          <Button
+            variant='ghost'
+            size='icon'
+            onClick={() =>
+              dispatch({ type: 'DELETE_TRANSACTION', payload: id })
+            }
+            className='flex items-center justify-center'
+          >
+            <Trash className='h-4 w-4 text-red-500' />
+          </Button>
+          <Button
+            variant='ghost'
+            size='icon'
+            onClick={() => onEdit(row.original)}
+            className='lex items-center justify-center'
+          >
+            <SquarePen className='h-4 w-4 text-red-500' />
+          </Button>
+        </div>
       );
     },
   },
