@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   flexRender,
   getCoreRowModel,
@@ -15,20 +15,43 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { CATEGORIES } from '@/data/mockData';
 
 export function DataTable({ columns, data }) {
   const [sorting, setSorting] = useState([{ id: 'amount', desc: true }]);
   const [globalFilter, setGlobalFilter] = useState('');
 
+  // Filter states
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+
+  // Apply filters manually before passing to table
+  const filteredData = useMemo(() => {
+    return data.filter((t) => {
+      if (typeFilter !== 'all' && t.type !== typeFilter) return false;
+      if (categoryFilter !== 'all' && t.category !== categoryFilter)
+        return false;
+      if (dateFrom && t.date < dateFrom) return false;
+      if (dateTo && t.date > dateTo) return false;
+      return true;
+    });
+  }, [data, typeFilter, categoryFilter, dateFrom, dateTo]);
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
-    state: {
-      sorting,
-      globalFilter,
-    },
+    state: { sorting, globalFilter },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
@@ -37,21 +60,85 @@ export function DataTable({ columns, data }) {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  const hasActiveFilters =
+    typeFilter !== 'all' || categoryFilter !== 'all' || dateFrom || dateTo;
+
+  const clearFilters = () => {
+    setTypeFilter('all');
+    setCategoryFilter('all');
+    setDateFrom('');
+    setDateTo('');
+  };
+
   return (
     <div>
-      {/* 🔍 Search */}
-      <div className='flex items-center py-4'>
+      {/* search n filters */}
+      <div className='flex flex-wrap items-center gap-2 py-4'>
+        {/* Search */}
         <Input
           placeholder='Search transactions...'
           value={globalFilter ?? ''}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          className='max-w-sm'
+          className='max-w-xs'
         />
+
+        {/* Spacer */}
+        <div className='flex-1' />
+
+        {/* Type Filter */}
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger className='w-[130px]'>
+            <SelectValue placeholder='Type' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value='all'>All Types</SelectItem>
+            <SelectItem value='income'>Income</SelectItem>
+            <SelectItem value='expense'>Expense</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Category Filter */}
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className='w-[150px]'>
+            <SelectValue placeholder='Category' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value='all'>All Categories</SelectItem>
+            {CATEGORIES.map((cat) => (
+              <SelectItem key={cat} value={cat}>
+                {cat}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Date From */}
+        <Input
+          type='date'
+          value={dateFrom}
+          onChange={(e) => setDateFrom(e.target.value)}
+          className='w-37.5'
+        />
+
+        {/* Date To */}
+        <Input
+          type='date'
+          value={dateTo}
+          onChange={(e) => setDateTo(e.target.value)}
+          className='w-37.5'
+        />
+
+        {/* Clear Filters — only shown when active */}
+        {hasActiveFilters && (
+          <Button variant='ghost' size='sm' onClick={clearFilters}>
+            Clear filters
+          </Button>
+        )}
       </div>
 
-      {/* 📊 Table */}
+      {/* Table */}
       <div className='rounded-md border'>
-        <Table>
+        <Table className='table-fixed w-full'>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
