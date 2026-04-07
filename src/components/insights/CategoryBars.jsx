@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 export default function CategoryBars({ data }) {
   const total = data.reduce((s, d) => s + d.value, 0);

@@ -8,20 +8,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogClose,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { useAppContext } from '@/context/AppContext';
-import { CATEGORIES } from '@/data/mockData';
+} from '../ui/select';
+import { useAppContext } from '../../context/AppContext';
+import { CATEGORIES } from '../../data/mockData';
 
 const schema = z.object({
   description: z.string().min(2, 'Description must be at least 2 characters'),

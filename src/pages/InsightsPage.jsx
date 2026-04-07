@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '../context/AppContext';
 import { TrendingUp, TrendingDown, Wallet, ReceiptText } from 'lucide-react';
 
-import MetricCard from '@/components/insights/MetricCard';
-import IncomeExpenseChart from '@/components/insights/IncomeExpenseChart';
-import ExpenseBreakdownChart from '@/components/insights/ExpenseBreakdownChart';
-import CategoryBars from '@/components/insights/CategoryBars';
-import MonthlySummary from '@/components/insights/MonthlySummary';
-import SavingsTrendChart from '@/components/insights/SavingsTrendChart';
+import MetricCard from '../components/insights/MetricCard';
+import IncomeExpenseChart from '../components/insights/IncomeExpenseChart';
+import ExpenseBreakdownChart from '../components/insights/ExpenseBreakdownChart';
+import CategoryBars from '../components/insights/CategoryBars';
+import MonthlySummary from '../components/insights/MonthlySummary';
+import SavingsTrendChart from '../components/insights/SavingsTrendChart';
 
 import { fmt, CATEGORY_COLORS, MONTHS_SHORT } from '../lib/helper';
 

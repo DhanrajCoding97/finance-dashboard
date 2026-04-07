@@ -5,16 +5,16 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '../ui/card';
 import {
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart';
-import { getMonthlyTrend } from '@/lib/helper';
-import { useAppContext } from '@/context/AppContext';
+} from '../../components/ui/chart';
+import { getMonthlyTrend } from '../../lib/helper';
+import { useAppContext } from '../../context/AppContext';
 
 const chartConfig = {
   income: {

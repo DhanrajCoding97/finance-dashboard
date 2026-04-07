@@ -1,6 +1,5 @@
-// import { useMemo } from 'react';
-import SummaryCards from '@/components/dashboard/SummaryCards';
-import BalanceTrend from '@/components/dashboard/BalanceTrend';
+import SummaryCards from '../components/dashboard/SummaryCards';
+import BalanceTrend from '../components/dashboard/BalanceTrend';
 
 const DashboardPage = () => {
   return (

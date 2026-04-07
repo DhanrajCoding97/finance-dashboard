@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '../ui/button';
 import { ArrowUpDown, Trash, SquarePen } from 'lucide-react';
 
 export const columns = (dispatch, isAdmin, onEdit) => [

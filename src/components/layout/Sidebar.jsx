@@ -16,11 +16,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Separator } from '@/components/ui/separator';
-import { useAppContext } from '@/context/AppContext';
-import { cn } from '@/lib/utils';
-import { RoleSelector } from '@/components/RoleSelector';
+} from '../ui/dropdown-menu';
+import { Separator } from '../ui/separator';
+import { useAppContext } from '../../context/AppContext';
+import { cn } from '../../lib/utils';
+import { RoleSelector } from '../RoleSelector';
+
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/transactions', label: 'Transactions', icon: ArrowLeftRight },

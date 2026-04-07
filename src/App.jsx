@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AppProvider } from '@/context/AppContext';
-import Layout from '@/components/layout/Layout';
-import DashboardPage from '@/pages/DashboardPage';
-import TransactionsPage from '@/pages/TransactionsPage';
-import InsightsPage from '@/pages/InsightsPage';
+import { AppProvider } from './context/AppContext';
+import Layout from './components/layout/Layout';
+import DashboardPage from './pages/DashboardPage';
+import TransactionsPage from './pages/TransactionsPage';
+import InsightsPage from './pages/InsightsPage';
 
 function App() {
   return (

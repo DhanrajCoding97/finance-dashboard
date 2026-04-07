@@ -3,19 +3,15 @@
 import * as React from 'react';
 import { CalendarIcon } from 'lucide-react';
 
-import { Calendar } from '@/components/ui/calendar';
-import { Field, FieldLabel } from '@/components/ui/field';
+import { Calendar } from '../ui/calendar';
+import { Field, FieldLabel } from '../ui/field';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@/components/ui/input-group';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+} from '../ui/input-group';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 function formatDate(date) {
   if (!date) return '';

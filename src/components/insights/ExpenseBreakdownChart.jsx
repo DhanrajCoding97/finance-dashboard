@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useMemo } from 'react';
+import { PieChart, Pie } from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
-} from '@/components/ui/chart';
-import { PieChart, Pie, Cell } from 'recharts';
-import { useMemo } from 'react';
+} from '../ui/chart';
 import { fmt } from '../../lib/helper';
 
 export default function ExpenseBreakdownChart({ data }) {

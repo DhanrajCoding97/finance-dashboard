@@ -1,9 +1,9 @@
-import { DataTable } from '../components/transactions/data-table';
-import { columns } from '@/components/transactions/columns';
-import { useAppContext } from '@/context/AppContext';
-import { AddTransaction } from '@/components/transactions/addTransaction';
-import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { DataTable } from '../components/transactions/data-table';
+import { columns } from '../components/transactions/columns';
+import { useAppContext } from '../context/AppContext';
+import { AddTransaction } from '../components/transactions/AddTransaction';
+import { Button } from '@/components/ui/button';
 
 const TransactionsPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);

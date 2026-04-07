@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '../ui/card';
 import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 function MetricCard({ label, value, sub, subPositive, icon: Icon, iconColor }) {
   return (
