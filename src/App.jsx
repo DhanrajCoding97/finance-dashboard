@@ -1,8 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider } from '@/context/AppContext';
+import Layout from '@/components/layout/Layout';
 import DashboardPage from '@/pages/DashboardPage';
 import TransactionsPage from '@/pages/TransactionsPage';
-import Layout from '@/components/layout/Layout';
+import InsightsPage from '@/pages/InsightsPage';
+
 function App() {
   return (
     <AppProvider>
@@ -12,6 +14,7 @@ function App() {
             <Route index element={<Navigate to='/dashboard' replace />} />
             <Route path='/dashboard' element={<DashboardPage />} />
             <Route path='/transactions' element={<TransactionsPage />} />
+            <Route path='/insights' element={<InsightsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -25,6 +25,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { CATEGORIES } from '@/data/mockData';
+import { exportToCSV } from '../../lib/helper';
+import { Download } from 'lucide-react';
 
 export function DataTable({ columns, data }) {
   const [sorting, setSorting] = useState([{ id: 'amount', desc: true }]);
@@ -84,6 +86,19 @@ export function DataTable({ columns, data }) {
 
         {/* Spacer */}
         <div className='flex-1' />
+
+        {/* Export CSV */}
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() =>
+            exportToCSV(table.getFilteredRowModel().rows.map((r) => r.original))
+          }
+          className='ml-auto flex items-center gap-1.5'
+        >
+          <Download className='h-3.5 w-3.5' />
+          Export CSV
+        </Button>
 
         {/* Type Filter */}
         <Select value={typeFilter} onValueChange={setTypeFilter}>

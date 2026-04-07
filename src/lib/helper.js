@@ -1,3 +1,4 @@
+// helper function for summary cards and dashboard charts
 export const calculateSummary = (transactions) => {
   const income = transactions
     .filter((t) => t.type === 'income')
@@ -95,6 +96,66 @@ export const getMonthlyTrend = (transactions) => {
       month,
       income,
       expenses,
-      balance: income - expenses, // ← derived here
+      balance: income - expenses,
     }));
 };
+
+//helper constants and functions for insight page charts
+export const CATEGORY_COLORS = {
+  Food: '#D012F3',
+  Housing: '#378ADD',
+  Transport: '#EF9F27',
+  Shopping: '#D4537E',
+  Health: '#8df873',
+  Entertainment: '#E24B4A',
+  Education: '#5DCAA5',
+  Others: '#888780',
+};
+
+export const MONTHS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+export function fmt(amount) {
+  return '₹' + Number(amount).toLocaleString('en-IN');
+}
+
+export function fmtK(amount) {
+  if (amount >= 100000) return '₹' + (amount / 100000).toFixed(1) + 'L';
+  if (amount >= 1000) return '₹' + (amount / 1000).toFixed(1) + 'k';
+  return '₹' + amount;
+}
+
+//helper function to extport transactions to CSV
+export function exportToCSV(transactions, filename = 'transactions.csv') {
+  const headers = ['Date', 'Description', 'Category', 'Type', 'Amount'];
+
+  const rows = transactions.map((t) => [
+    t.date,
+    `"${t.description.replace(/"/g, '""')}"`,
+    t.category,
+    t.type,
+    t.amount,
+  ]);
+
+  const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
